@@ -32,10 +32,12 @@ try {
     );
 
     $installer->setAdditionalInstalledRepository(
-        new InstalledFilesystemRepository(new JsonFile(__DIR__ . '/../../vendor/composer/installed.json'))
+        new InstalledFilesystemRepository(new JsonFile(__DIR__ . '/../vendor/composer/installed.json'))
     );
 
-    $installer->run();
+    $installer
+        ->setWriteLock(false)
+        ->run();
 } catch (\Exception $e) {
     echo $e->getMessage() . PHP_EOL;
 }
