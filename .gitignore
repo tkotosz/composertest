@@ -1,0 +1,4 @@
+/vendor
+/vendor-custom
+/bin/*
+!/bin/console
