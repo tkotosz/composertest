@@ -19,7 +19,7 @@ class ExtensionInstallCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $composerIo = new ConsoleIO($input, $output, $this->getHelperSet());
-        $customComposer = Factory::create($composerIo, 'custom-composer.json', true);
+        $customComposer = Factory::create($composerIo, 'fooapp-composer.json', true);
         $installer = Installer::create($composerIo, $customComposer);
 
         $installer
