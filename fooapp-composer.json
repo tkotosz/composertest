@@ -8,8 +8,6 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "psr/container": "*",
-        "symfony/yaml": "*",
         "tkotosz/fooapp-foo-extension": "*"
     },
     "provide": {
