@@ -1,0 +1,19 @@
+{
+    "name": "tkotosz/first-composertest-plugin",
+    "type": "composertest-plugin",
+    "authors": [
+        {
+            "name": "tkotosz",
+            "email": "tkotosz@inviqa.com"
+        }
+    ],
+    "require": {
+        "symfony/yaml": "*",
+        "tkotosz/composertest": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Foo\\Bar\\": "src"
+        }
+    }
+}

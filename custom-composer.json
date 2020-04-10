@@ -1,6 +1,21 @@
 {
+    "repositories": [
+        {
+            "type": "path",
+            "url": "first-composertest-plugin/"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "psr/container": "*",
-        "symfony/yaml": "*"
+        "symfony/yaml": "*",
+        "tkotosz/first-composertest-plugin": "*"
+    },
+    "provide": {
+        "tkotosz/composertest": "*"
+    },
+    "config": {
+        "vendor-dir": "vendor-custom"
     }
 }

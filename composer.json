@@ -2,7 +2,7 @@
     "name": "tkotosz/composertest",
     "type": "project",
     "require": {
-        "composer/composer": "^1.9"
+        "composer/composer": "2.0.x-dev"
     },
     "authors": [
         {
@@ -10,9 +10,11 @@
             "email": "kotosy@gmail.com"
         }
     ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Tkotosz\\Composer\\": "src/Tkotosz/Composer"
+            "Tkotosz\\ComposerTest\\": "src"
         }
     }
 }

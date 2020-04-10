@@ -3,41 +3,54 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+if (file_exists(__DIR__ . '/../vendor-custom/autoload.php')) {
+    require __DIR__ . '/../vendor-custom/autoload.php';
+}
+
+$plugins = array_map(function ($className) {
+    return new $className;
+}, require __DIR__ . '/../plugins.php');
+
+use Composer\Factory;
 use Composer\Installer;
 use Composer\IO\ConsoleIO;
-use Composer\Json\JsonFile;
-use Composer\Repository\InstalledFilesystemRepository;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Tkotosz\Composer\CustomComposerFactory;
-
-$composerIo = new ConsoleIO(
-    new ArgvInput(),
-    new ConsoleOutput(),
-    new HelperSet(['question' => new QuestionHelper()])
-);
 
 try {
-    $customComposer = CustomComposerFactory::createCustomComposer(
-        $composerIo,
-        'custom-composer.json',
-        'vendor-custom'
-    );
+    if ($_SERVER['argv'][1] ?? '' === 'install') {
 
-    $installer = Installer::create(
-        $composerIo,
-        $customComposer
-    );
+        $composerIo = new ConsoleIO(
+            new ArgvInput(),
+            new ConsoleOutput(),
+            new HelperSet(['question' => new QuestionHelper()])
+        );
 
-    $installer->setAdditionalInstalledRepository(
-        new InstalledFilesystemRepository(new JsonFile(__DIR__ . '/../vendor/composer/installed.json'))
-    );
+        $customComposer = Factory::create(
+            $composerIo,
+            'custom-composer.json',
+            true
+        );
 
-    $installer
-        ->setWriteLock(false)
-        ->run();
+        $installer = Installer::create(
+            $composerIo,
+            $customComposer
+        );
+
+        $installer
+            ->setUpdate(true)
+            ->setWriteLock(false)
+            ->setDevMode(false)
+            ->setPreferStable(true)
+            ->run();
+    } else {
+        foreach ($plugins as $plugin) {
+            $plugin->load();
+        }
+    }
+
 } catch (\Exception $e) {
     echo $e->getMessage() . PHP_EOL;
 }
