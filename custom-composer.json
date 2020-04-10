@@ -2,7 +2,7 @@
     "repositories": [
         {
             "type": "path",
-            "url": "first-composertest-plugin/"
+            "url": "fooapp-foo-extension/"
         }
     ],
     "minimum-stability": "dev",
@@ -10,12 +10,12 @@
     "require": {
         "psr/container": "*",
         "symfony/yaml": "*",
-        "tkotosz/first-composertest-plugin": "*"
+        "tkotosz/fooapp-foo-extension": "*"
     },
     "provide": {
-        "tkotosz/composertest": "*"
+        "tkotosz/fooapp": "*"
     },
     "config": {
-        "vendor-dir": "vendor-custom"
+        "vendor-dir": "vendor-fooapp"
     }
 }

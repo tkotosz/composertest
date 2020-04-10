@@ -1,6 +1,6 @@
 {
-    "name": "tkotosz/first-composertest-plugin",
-    "type": "composertest-plugin",
+    "name": "tkotosz/fooapp-foo-extension",
+    "type": "fooapp-plugin",
     "authors": [
         {
             "name": "tkotosz",
@@ -9,11 +9,11 @@
     ],
     "require": {
         "symfony/yaml": "*",
-        "tkotosz/composertest": "*"
+        "tkotosz/fooapp": "*"
     },
     "autoload": {
         "psr-4": {
-            "Foo\\Bar\\": "src"
+            "Tkotosz\\FooApp\\FooExtension\\": "src"
         }
     }
 }

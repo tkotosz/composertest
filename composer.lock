@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d90f9fe67f660ac7b40986c3dae271f3",
+    "content-hash": "7dfbd2660db18c17dfe94c48da4c880e",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -68,12 +68,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "a7ad186c89a597239536586b6fd09ac5df154869"
+                "reference": "40a35abb9423e16f8bafcb1ed1b7e027881b0422"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/a7ad186c89a597239536586b6fd09ac5df154869",
-                "reference": "a7ad186c89a597239536586b6fd09ac5df154869",
+                "url": "https://api.github.com/repos/composer/composer/zipball/40a35abb9423e16f8bafcb1ed1b7e027881b0422",
+                "reference": "40a35abb9423e16f8bafcb1ed1b7e027881b0422",
                 "shasum": ""
             },
             "require": {
@@ -141,7 +141,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2020-04-09T15:12:35+00:00"
+            "time": "2020-04-10T10:24:43+00:00"
         },
         {
             "name": "composer/semver",

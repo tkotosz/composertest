@@ -1,0 +1,26 @@
+#!/bin/env php
+<?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
+if (file_exists(__DIR__ . '/../vendor-fooapp/autoload.php')) {
+    require __DIR__ . '/../vendor-fooapp/autoload.php';
+}
+
+use Symfony\Component\Console\Application;
+use Tkotosz\FooApp\Console\Command\ExtensionInstallCommand;
+
+$plugins = array_map(function ($className) {
+    return new $className;
+}, require __DIR__ . '/../plugins.php');
+
+$application = new Application('composer-test', '1.0.0');
+
+$application->add(new ExtensionInstallCommand());
+
+foreach ($plugins as $plugin) {
+    $plugin->load($application);
+}
+
+$application->setCatchExceptions(true);
+$application->run();

@@ -1,5 +1,5 @@
 <?php
 
 return [
-    '\Foo\Bar\FooPlugin'
+    '\Tkotosz\FooApp\FooExtension\FooExtension'
 ];

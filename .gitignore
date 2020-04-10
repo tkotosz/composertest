@@ -1,4 +1,4 @@
 /vendor
-/vendor-custom
+/vendor-fooapp
 /bin/*
-!/bin/console
+!/bin/fooapp

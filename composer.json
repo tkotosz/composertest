@@ -1,8 +1,9 @@
 {
-    "name": "tkotosz/composertest",
+    "name": "tkotosz/fooapp",
     "type": "project",
     "require": {
-        "composer/composer": "2.0.x-dev"
+        "composer/composer": "2.0.x-dev",
+        "symfony/console": "^5.0"
     },
     "authors": [
         {
@@ -14,7 +15,7 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Tkotosz\\ComposerTest\\": "src"
+            "Tkotosz\\FooApp\\": "src"
         }
     }
 }
