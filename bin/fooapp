@@ -16,7 +16,7 @@ $plugins = array_filter(array_map(function ($className) {
     } catch (Throwable $e) {
         return null;
     }
-}, require __DIR__ . '/../plugins.php'));
+}, require __DIR__ . '/../fooapp-extensions.php'));
 
 $application = new Application('fooapp', '1.0.0');
 
