@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7dfbd2660db18c17dfe94c48da4c880e",
+    "content-hash": "7d1999b0bb6c93cd1c7e2dc68844b812",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -1065,6 +1065,31 @@
                 "standards"
             ],
             "time": "2019-11-18T17:27:11+00:00"
+        },
+        {
+            "name": "tkotosz/composer-wrapper",
+            "version": "dev-play-with-composer-2x",
+            "dist": {
+                "type": "path",
+                "url": "composer-wrapper",
+                "reference": "17b0769f85814a52c400c81e2e5c91c40c4c3d73"
+            },
+            "require": {
+                "composer/composer": "2.0.x-dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tkotosz\\ComposerWrapper\\": "src"
+                }
+            },
+            "authors": [
+                {
+                    "name": "tkotosz",
+                    "email": "kotosy@gmail.com"
+                }
+            ],
+            "description": "Composer wrapper"
         }
     ],
     "packages-dev": [],
@@ -1075,6 +1100,8 @@
     },
     "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-json": "*"
+    },
     "platform-dev": []
 }

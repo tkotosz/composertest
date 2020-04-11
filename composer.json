@@ -1,9 +1,16 @@
 {
-    "name": "tkotosz/fooapp",
+    "name": "tkotosz/fooapp-cli",
     "type": "project",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "composer-wrapper/"
+        }
+    ],
     "require": {
         "composer/composer": "2.0.x-dev",
-        "symfony/console": "^5.0"
+        "tkotosz/composer-wrapper": "*",
+        "ext-json": "*"
     },
     "authors": [
         {
@@ -15,7 +22,7 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Tkotosz\\FooApp\\": "src"
+            "Tkotosz\\FooAppCli\\": "src"
         }
     }
 }

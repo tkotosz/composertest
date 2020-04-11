@@ -1,0 +1,22 @@
+{
+    "name": "tkotosz/fooapp-console-extension",
+    "type": "fooapp-extension",
+    "authors": [
+        {
+            "name": "tkotosz",
+            "email": "tkotosz@inviqa.com"
+        }
+    ],
+    "require": {
+        "tkotosz/fooapp": "*",
+        "symfony/console": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tkotosz\\FooApp\\ConsoleExtension\\": "src"
+        }
+    },
+    "extra": {
+        "fooapp-extension-class": "Tkotosz\\FooApp\\ConsoleExtension\\ConsoleExtension"
+    }
+}

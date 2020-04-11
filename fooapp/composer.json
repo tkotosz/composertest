@@ -1,0 +1,16 @@
+{
+    "name": "tkotosz/fooapp",
+    "type": "library",
+    "description": "Foo application",
+    "authors": [
+        {
+            "name": "tkotosz",
+            "email": "tkotosz@inviqa.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Tkotosz\\FooApp\\": "src"
+        }
+    }
+}

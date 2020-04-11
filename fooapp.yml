@@ -1,0 +1,2 @@
+extensions:
+    - { name: tkotosz/fooapp-foo-extension, version: '*' }

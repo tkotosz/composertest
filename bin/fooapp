@@ -1,30 +1,10 @@
 #!/bin/env php
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../src/config/bootstrap.php';
 
-if (file_exists(__DIR__ . '/../vendor-fooapp/autoload.php')) {
-    require __DIR__ . '/../vendor-fooapp/autoload.php';
-}
+use Tkotosz\FooApp\Application;
+use Tkotosz\FooApp\ApplicationConfig;
 
-use Symfony\Component\Console\Application;
-use Tkotosz\FooApp\Console\Command\ExtensionInstallCommand;
-
-$plugins = array_filter(array_map(function ($className) {
-    try {
-        return new $className;
-    } catch (Throwable $e) {
-        return null;
-    }
-}, require __DIR__ . '/../fooapp-extensions.php'));
-
-$application = new Application('fooapp', '1.0.0');
-
-$application->add(new ExtensionInstallCommand());
-
-foreach ($plugins as $plugin) {
-    $plugin->load($application);
-}
-
-$application->setCatchExceptions(true);
+$application = new Application(new ApplicationConfig($appConfig));
 $application->run();

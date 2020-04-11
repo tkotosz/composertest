@@ -1,6 +1,6 @@
 {
     "name": "tkotosz/fooapp-foo-extension",
-    "type": "fooapp-plugin",
+    "type": "fooapp-extension",
     "authors": [
         {
             "name": "tkotosz",
@@ -8,12 +8,14 @@
         }
     ],
     "require": {
-        "symfony/yaml": "*",
         "tkotosz/fooapp": "*"
     },
     "autoload": {
         "psr-4": {
             "Tkotosz\\FooApp\\FooExtension\\": "src"
         }
+    },
+    "extra": {
+        "fooapp-extension-class": "Tkotosz\\FooApp\\FooExtension\\FooExtension"
     }
 }

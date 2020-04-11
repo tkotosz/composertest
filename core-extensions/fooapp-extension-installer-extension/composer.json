@@ -1,0 +1,26 @@
+{
+    "name": "tkotosz/fooapp-extension-installer-extension",
+    "type": "fooapp-extension",
+    "authors": [
+        {
+            "name": "tkotosz",
+            "email": "tkotosz@inviqa.com"
+        }
+    ],
+    "require": {
+        "tkotosz/fooapp": "*",
+        "tkotosz/composer-wrapper": "*",
+        "tkotosz/fooapp-console-extension": "*",
+        "symfony/console": "*",
+        "league/flysystem": "*",
+        "symfony/yaml": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tkotosz\\FooApp\\ExtensionInstallerExtension\\": "src"
+        }
+    },
+    "extra": {
+        "fooapp-extension-class": "Tkotosz\\FooApp\\ExtensionInstallerExtension\\ExtensionInstallerExtension"
+    }
+}
