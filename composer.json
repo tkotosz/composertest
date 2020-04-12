@@ -1,10 +1,13 @@
 {
-    "name": "tkotosz/fooapp-cli",
+    "name": "tkotosz/fooapp",
     "type": "project",
     "repositories": [
         {
             "type": "path",
-            "url": "composer-wrapper/"
+            "url": "fooapp-extension-api/",
+            "options": {
+                "symlink": false
+            }
         }
     ],
     "require": {
@@ -12,7 +15,8 @@
         "ext-json": "*",
         "symfony/console": "^5.0",
         "league/flysystem": "^1.0",
-        "symfony/yaml": "^5.0"
+        "symfony/yaml": "^5.0",
+        "tkotosz/fooapp-extension-api": "*"
     },
     "authors": [
         {
@@ -25,7 +29,7 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Tkotosz\\FooAppCli\\": "src"
+            "Tkotosz\\FooApp\\": "src"
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tkotosz\FooAppCli\Console\Command;
+namespace Tkotosz\FooApp\Console\Command;
 
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
@@ -9,8 +9,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
-use Tkotosz\FooAppCli\Composer\Composer;
-use Tkotosz\FooAppCli\Composer\ComposerConfig;
+use Tkotosz\FooApp\Composer\Composer;
+use Tkotosz\FooApp\Composer\ComposerConfig;
 
 class ExtensionInstallCommand extends Command
 {

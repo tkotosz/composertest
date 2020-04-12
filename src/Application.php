@@ -3,28 +3,27 @@
 namespace Tkotosz\FooApp;
 
 use ReflectionClass;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
-use Tkotosz\FooApp\ConsoleExtension\ConsoleExtension;
+use Tkotosz\FooApp\Console\Command\ExtensionInstallCommand;
 
 class Application
 {
     /** @var array */
     private $extensions;
 
-    /** @var callable */
-    private $externalCommandsCallback;
-
-    public function __construct(array $extensions, callable $externalCommandsCallback)
+    public function __construct(array $extensions)
     {
         $this->extensions = $extensions;
-        $this->externalCommandsCallback = $externalCommandsCallback;
     }
 
-    public function run(): void
+    public function run($composerConfig): void
     {
+        $app = new \Symfony\Component\Console\Application();
+        $commandRegistry = new CommandRegistry();
         $extensions = $this->createExtensions();
-
-        $consoleExtension = $this->findConsoleExtension($extensions);
 
         foreach ($extensions as $extension) {
             if ((new ReflectionClass($extension))->hasMethod('initialize')) {
@@ -40,12 +39,26 @@ class Application
 
         foreach ($extensions as $extension) {
             if ((new ReflectionClass($extension))->hasMethod('load')) {
-                $extension->load($consoleExtension->getApplication());
+                $extension->load($commandRegistry);
             }
         }
 
-        $app = $consoleExtension->getApplication();
-        $app->add(new ExtensionInstallCommandProxy($this->externalCommandsCallback));
+        $app->add(new ExtensionInstallCommand($composerConfig));
+
+        $foo = $commandRegistry->getFoo();
+
+        if ($foo) {
+
+            $app->add(new class($foo->name()) extends Command {
+                protected function execute(InputInterface $input, OutputInterface $output)
+                {
+                    $output->writeln('I am running!');
+
+                    return 0;
+                }
+            });
+        }
+
         $app->run();
     }
 
@@ -55,19 +68,9 @@ class Application
             try {
                 return new $className;
             } catch (Throwable $e) {
+                echo $e->getMessage() . PHP_EOL;
                 return null;
             }
         }, $this->extensions));
-    }
-
-    private function findConsoleExtension($extensions): ConsoleExtension
-    {
-        foreach ($extensions as $extension) {
-            if ($extension instanceof \Tkotosz\FooApp\ConsoleExtension\ConsoleExtension) {
-                return $extension;
-            }
-        }
-
-        throw new \RuntimeException('something went wrong');
     }
 }

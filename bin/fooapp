@@ -3,9 +3,8 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Tkotosz\FooAppCli\Composer\Composer;
-use Tkotosz\FooAppCli\Composer\ComposerConfig;
-use Tkotosz\FooAppCli\Console\Command\ExtensionInstallCommand;
+use Tkotosz\FooApp\Composer\Composer;
+use Tkotosz\FooApp\Composer\ComposerConfig;
 
 $config = require __DIR__ . '/../src/config/config.php';
 $composerConfig = new ComposerConfig(
@@ -29,20 +28,6 @@ if (!file_exists($appAutoload)) {
 
 require $appAutoload;
 
-$baseCli = new \Symfony\Component\Console\Application('dd', '1.0.0');
-$baseCli->add(new ExtensionInstallCommand($composerConfig));
-
 $extensions = require getcwd() . '/' . $composerConfig->appDir() . '/extensions.php';
-$callBack = function () use ($baseCli) {
-    $baseCli->run();
-};
-
-$mainApp = $config['main_application'];
-if (!class_exists($mainApp)) {
-    echo "Could not autoload the main application ($mainApp)";
-    exit(255);
-}
-
-$application = new $mainApp($extensions, $callBack);
-
-$application->run();
+$application = new \Tkotosz\FooApp\Application($extensions);
+$application->run($composerConfig);

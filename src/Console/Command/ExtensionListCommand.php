@@ -1,6 +1,6 @@
 <?php
 
-namespace Tkotosz\FooAppCli\Console\Command;
+namespace Tkotosz\FooApp\Console\Command;
 
 use Composer\Factory;
 use Composer\Installer;

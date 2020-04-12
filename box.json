@@ -3,5 +3,6 @@
     "KevinGH\\Box\\Compactor\\Php",
     "KevinGH\\Box\\Compactor\\PhpScoper"
   ],
-  "php-scoper": "scoper.inc.php"
+  "php-scoper": "scoper.inc.php",
+  "dump-autoload": true
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "42133535c760843cc94e59319b52d4a2",
+    "content-hash": "4af26bd11cb969c8d30f52d6e3274ef6",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -1208,6 +1208,31 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2020-03-30T11:42:42+00:00"
+        },
+        {
+            "name": "tkotosz/fooapp-extension-api",
+            "version": "dev-play-with-composer-2x",
+            "dist": {
+                "type": "path",
+                "url": "fooapp-extension-api",
+                "reference": "2b9cbe7386326170260cd7f338befdb4aea1a5f7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tkotosz\\FooApp\\ExtensionApi\\": "src"
+                }
+            },
+            "authors": [
+                {
+                    "name": "tkotosz",
+                    "email": "tkotosz@inviqa.com"
+                }
+            ],
+            "description": "Foo Extension API",
+            "transport-options": {
+                "symlink": false
+            }
         }
     ],
     "packages-dev": [],

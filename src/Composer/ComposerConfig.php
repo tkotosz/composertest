@@ -1,6 +1,6 @@
 <?php
 
-namespace Tkotosz\FooAppCli\Composer;
+namespace Tkotosz\FooApp\Composer;
 
 class ComposerConfig
 {
@@ -27,8 +27,15 @@ class ComposerConfig
             'minimum-stability' => 'dev',
             'prefer-stable' => true,
             'config' => ['vendor-dir' => $this->appDir],
-            'require' => $this->rootRequirements
+            'require' => $this->rootRequirements,
+            'provide' => [
+                'tkotosz/fooapp-extension-api' => '*'
+            ]
         ];
+
+        if (empty($config['require'])) {
+            unset($config['require']);
+        }
 
         return json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     }

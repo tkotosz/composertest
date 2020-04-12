@@ -2,18 +2,24 @@
 
 namespace Tkotosz\FooApp\FooExtension;
 
-use Symfony\Component\Console\Application;
-use Tkotosz\FooApp\FooExtension\Console\Command\FooCommand;
+use Tkotosz\FooApp\ExtensionApi\Command;
+use Tkotosz\FooApp\ExtensionApi\CommandRegistry;
+use Tkotosz\FooApp\ExtensionApi\Extension;
 
-class FooExtension
+class FooExtension implements Extension
 {
-    public function initialize()
+    public function initialize(): void
     {
-
+        // TODO: Implement initialize() method.
     }
 
-    public function load(Application $application)
+    public function configure(): void
     {
-        $application->add(new FooCommand());
+        // TODO: Implement configure() method.
+    }
+
+    public function load(CommandRegistry $commandRegistry): void
+    {
+        $commandRegistry->add(new Command('foo:run'));
     }
 }

@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "tkotosz/fooapp": "*"
+        "tkotosz/fooapp-extension-api": "*"
     },
     "autoload": {
         "psr-4": {
