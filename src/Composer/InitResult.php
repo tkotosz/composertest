@@ -1,6 +1,6 @@
 <?php
 
-namespace Tkotosz\ComposerWrapper;
+namespace Tkotosz\FooAppCli\Composer;
 
 class InitResult
 {

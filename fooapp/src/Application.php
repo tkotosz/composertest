@@ -8,12 +8,16 @@ use Tkotosz\FooApp\ConsoleExtension\ConsoleExtension;
 
 class Application
 {
-    /** @var ApplicationConfig */
-    private $applicationConfig;
+    /** @var array */
+    private $extensions;
 
-    public function __construct(ApplicationConfig $applicationConfig)
+    /** @var callable */
+    private $externalCommandsCallback;
+
+    public function __construct(array $extensions, callable $externalCommandsCallback)
     {
-        $this->applicationConfig = $applicationConfig;
+        $this->extensions = $extensions;
+        $this->externalCommandsCallback = $externalCommandsCallback;
     }
 
     public function run(): void
@@ -36,13 +40,13 @@ class Application
 
         foreach ($extensions as $extension) {
             if ((new ReflectionClass($extension))->hasMethod('load')) {
-                $extension->load($this->applicationConfig, $consoleExtension->getApplication());
+                $extension->load($consoleExtension->getApplication());
             }
         }
 
-        $consoleExtension
-            ->getApplication()
-            ->run();
+        $app = $consoleExtension->getApplication();
+        $app->add(new ExtensionInstallCommandProxy($this->externalCommandsCallback));
+        $app->run();
     }
 
     private function createExtensions(): array
@@ -53,7 +57,7 @@ class Application
             } catch (Throwable $e) {
                 return null;
             }
-        }, $this->applicationConfig->extensions()));
+        }, $this->extensions));
     }
 
     private function findConsoleExtension($extensions): ConsoleExtension

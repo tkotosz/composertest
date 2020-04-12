@@ -1,6 +1,6 @@
 <?php
 
-namespace Tkotosz\ComposerWrapper;
+namespace Tkotosz\FooAppCli\Composer;
 
 class ComposerConfig
 {
@@ -36,6 +36,11 @@ class ComposerConfig
     public function appDir(): string
     {
         return $this->appDir;
+    }
+
+    public function rootRequirements(): array
+    {
+        return $this->rootRequirements;
     }
 
     public function composerJsonFile(): string

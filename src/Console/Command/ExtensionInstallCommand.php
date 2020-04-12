@@ -1,10 +1,7 @@
 <?php
 
-namespace Tkotosz\FooApp\ExtensionInstallerExtension\Console\Command;
+namespace Tkotosz\FooAppCli\Console\Command;
 
-use Composer\Factory;
-use Composer\Installer;
-use Composer\IO\ConsoleIO;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
@@ -12,20 +9,19 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
-use Tkotosz\ComposerWrapper\Composer;
-use Tkotosz\ComposerWrapper\ComposerConfig;
-use Tkotosz\FooApp\ApplicationConfig;
+use Tkotosz\FooAppCli\Composer\Composer;
+use Tkotosz\FooAppCli\Composer\ComposerConfig;
 
 class ExtensionInstallCommand extends Command
 {
-    /** @var ApplicationConfig */
-    private $applicationConfig;
+    /** @var ComposerConfig */
+    private $composerConfig;
 
-    public function __construct(ApplicationConfig $applicationConfig)
+    public function __construct(ComposerConfig $composerConfig)
     {
         parent::__construct();
 
-        $this->applicationConfig = $applicationConfig;
+        $this->composerConfig = $composerConfig;
     }
 
     protected function configure()
@@ -38,11 +34,7 @@ class ExtensionInstallCommand extends Command
     {
         $fileSystem = new Filesystem(new Local('./'));
 
-        $composerConfig = new ComposerConfig(
-            $this->applicationConfig->appDir(),
-            $this->applicationConfig->rootRequirements(),
-            $this->applicationConfig->composerRepositories()
-        );
+        $composerConfig = $this->composerConfig;
 
         $composer = new Composer($composerConfig);
 
@@ -70,7 +62,7 @@ class ExtensionInstallCommand extends Command
             }
         }
 
-        $composerJsonContent['require'] = $this->applicationConfig->rootRequirements();
+        $composerJsonContent['require'] = $this->composerConfig->rootRequirements();
 
         foreach ($conf['extensions'] ?? [] as $extension) {
             $composerJsonContent['require'][$extension['name']] = $extension['version'];
