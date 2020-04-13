@@ -16,7 +16,9 @@
         "symfony/console": "^5.0",
         "league/flysystem": "^1.0",
         "symfony/yaml": "^5.0",
-        "tkotosz/fooapp-extension-api": "*"
+        "tkotosz/fooapp-extension-api": "*",
+        "symfony/dependency-injection": "^5.0",
+        "symfony/config": "^5.0"
     },
     "authors": [
         {

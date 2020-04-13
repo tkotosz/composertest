@@ -6,7 +6,17 @@ require __DIR__ . '/../vendor/autoload.php';
 use Tkotosz\FooApp\Composer\Composer;
 use Tkotosz\FooApp\Composer\ComposerConfig;
 
-$config = require __DIR__ . '/../src/config/config.php';
+$config = [
+    'app_dir' => '.fooapp',
+    'root_requirements' => [
+        'tkotosz/fooapp-extension-api' => '*'
+    ],
+    'repositories' => [
+        ['type' => 'path', 'url' => 'core-extensions/*'],
+        ['type' => 'path', 'url' => 'fooapp-extension-api/'],
+    ]
+];
+
 $composerConfig = new ComposerConfig(
     $config['app_dir'],
     $config['root_requirements'],

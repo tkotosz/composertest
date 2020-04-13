@@ -2,18 +2,9 @@
 
 namespace Tkotosz\FooApp\ExtensionApi;
 
-class Command
+interface Command
 {
-    /** @var string */
-    private $name;
+    public function getDefinition(): CommandDefinition;
 
-    public function __construct(string $name)
-    {
-        $this->name = $name;
-    }
-
-    public function name(): string
-    {
-        return $this->name;
-    }
+    public function getHandlerServiceId(): CommandHandlerServiceId;
 }

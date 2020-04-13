@@ -2,12 +2,23 @@
 
 namespace Tkotosz\FooApp;
 
-use ReflectionClass;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Yaml\Yaml;
+use Tkotosz\FooApp\Composer\ComposerConfig;
 use Tkotosz\FooApp\Console\Command\ExtensionInstallCommand;
+use Tkotosz\FooApp\Console\CompositeCommandsProvider;
+use Tkotosz\FooApp\Console\SymfonyCommandLoader;
+use Tkotosz\FooApp\DependencyInjection\CompilerPass\RegisterCommandsCompilerPass;
+use Tkotosz\FooApp\DependencyInjection\DependencyInjectionContainer;
+use Tkotosz\FooApp\ExtensionApi\Command;
+use Tkotosz\FooApp\ExtensionApi\CommandHandler;
+use Tkotosz\FooApp\ExtensionApi\CommandProviderInterface;
+use Tkotosz\FooApp\ExtensionApi\Extension;
+use Tkotosz\FooApp\FooExtension\Config;
 
 class Application
 {
@@ -19,58 +30,103 @@ class Application
         $this->extensions = $extensions;
     }
 
-    public function run($composerConfig): void
+    public function run(ComposerConfig $composerConfig): void
     {
-        $app = new \Symfony\Component\Console\Application();
-        $commandRegistry = new CommandRegistry();
+        $containerBuilder = new ContainerBuilder();
+        $container = new DependencyInjectionContainer($containerBuilder);
+
+        $container->registerServicesFromPath(__NAMESPACE__ . '\\', __DIR__ . '/../src/*');
+        $container->registerServiceAlias(CommandProviderInterface::class, CompositeCommandsProvider::class);
+        $container->registerForAutoTagging(Command::class, 'fooapp.cli.command');
+        $container->registerForAutoTagging(CommandHandler::class, 'fooapp.cli.command.handler');
+        $container->registerForAutoTagging(CommandProviderInterface::class, 'fooapp.cli.command.provider');
+
+
+
+        $containerBuilder->addCompilerPass(new RegisterCommandsCompilerPass());
+
+        $appDefinition = new Definition(
+            \Symfony\Component\Console\Application::class,
+            ['Foo App', '1.0.0']
+        );
+        $appDefinition->setPublic(true);
+        $appDefinition->addMethodCall('setCommandLoader', [new Reference(SymfonyCommandLoader::class)]);
+        $containerBuilder->setDefinition('fooapp.cli', $appDefinition);
+
+
+
+
+        $treeBuilder = new TreeBuilder('root');
+        $builder = $treeBuilder->getRootNode();
+
+        $extensions = (new TreeBuilder('extensions'))->getRootNode();
+        $extensions
+            ->arrayPrototype()
+                ->children()
+                    ->scalarNode('name')->end()
+                    ->scalarNode('version')->end()
+                ->end()
+            ->end();
+
+        $foo = (new TreeBuilder('foo'))->getRootNode();
+        $foo
+            ->children()
+                ->scalarNode('bar')->end()
+            ->end();
+
+        $builder
+            ->append($extensions)
+            ->append($foo);
+
         $extensions = $this->createExtensions();
 
         foreach ($extensions as $extension) {
-            if ((new ReflectionClass($extension))->hasMethod('initialize')) {
-                $extension->initialize();
-            }
+            $extension->initialize();
         }
 
         foreach ($extensions as $extension) {
-            if ((new ReflectionClass($extension))->hasMethod('configure')) {
-                $extension->configure();
-            }
+            $extension->configure($builder);
+        }
+
+        $configTree = $treeBuilder->buildTree();
+
+        $configProcessor = new Processor();
+
+        try {
+            $inputConfig = Yaml::parse(file_get_contents(getcwd() . '/fooapp.yml'));
+            $processedConfig = $configProcessor->process($configTree, ['root' => $inputConfig]);
+        } catch (\Throwable $throwable) {
+            echo $throwable->getMessage() . PHP_EOL;
+            die;
         }
 
         foreach ($extensions as $extension) {
-            if ((new ReflectionClass($extension))->hasMethod('load')) {
-                $extension->load($commandRegistry);
-            }
+            $extension->load($container, $processedConfig);
         }
+
+        $containerBuilder->compile();
+        $app = $containerBuilder->get('fooapp.cli');
 
         $app->add(new ExtensionInstallCommand($composerConfig));
-
-        $foo = $commandRegistry->getFoo();
-
-        if ($foo) {
-
-            $app->add(new class($foo->name()) extends Command {
-                protected function execute(InputInterface $input, OutputInterface $output)
-                {
-                    $output->writeln('I am running!');
-
-                    return 0;
-                }
-            });
-        }
 
         $app->run();
     }
 
+    /**
+     * @return Extension[]
+     */
     private function createExtensions(): array
     {
         return array_filter(array_map(function ($className) {
-            try {
-                return new $className;
-            } catch (Throwable $e) {
-                echo $e->getMessage() . PHP_EOL;
-                return null;
+            if (!class_exists($className)) {
+                throw new \RuntimeException(sprintf('Extension class "%s" not found', $className));
             }
+
+            if (!is_subclass_of($className, Extension::class)) {
+                throw new \RuntimeException(sprintf('Extension "%s" must implement "%s" interface', $className, Extension::class));
+            }
+
+            return new $className;
         }, $this->extensions));
     }
 }

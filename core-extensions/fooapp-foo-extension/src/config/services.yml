@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    autowire: false
+    autoconfigure: true
+    public: true
+
+#  Tkotosz\FooApp\FooExtension\:
+#    resource: '../{CommandProvider,CommandHandler}'
+
+  Tkotosz\FooApp\FooExtension\Config: ~
+
+  Tkotosz\FooApp\FooExtension\CommandProvider\DynamicCommandsProvider:
+    arguments:
+      - '@Tkotosz\FooApp\FooExtension\Config'
