@@ -10,9 +10,9 @@ return [
             );
         },
     ],
-    'files-whitelist' => ['src/config.php'],
+    'files-whitelist' => ['config.php'],
     'whitelist' => [
-        'Tkotosz\WrappedCliApp\*',
+        'Tkotosz\CliAppWrapperApi\*',
         'Composer\Autoload\ClassLoader'
     ]
 ];

@@ -3,4 +3,6 @@
 /bin/*
 !/bin/fooapp
 /.fooapp
+/*/vendor/
+/*/.fooapp/
 

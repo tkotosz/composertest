@@ -4,5 +4,6 @@
     "KevinGH\\Box\\Compactor\\PhpScoper"
   ],
   "php-scoper": "scoper.inc.php",
-  "dump-autoload": true
+  "dump-autoload": true,
+  "output" : "bin/fooapp.phar"
 }

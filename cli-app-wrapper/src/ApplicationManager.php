@@ -42,7 +42,7 @@ class ApplicationManager implements ApplicationManagerInterface
             return [];
         }
 
-        return Yaml::parse(file_get_contents($userConfigPath));
+        return Yaml::parse(file_get_contents($userConfigPath)) ?: [];
     }
 
     public function installExtension(string $extension): int

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ce7b3ba3a026bf105741500f6e4896c3",
+    "content-hash": "b2d6c4ba05094a1483725f736a6eb494",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -68,12 +68,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "40a35abb9423e16f8bafcb1ed1b7e027881b0422"
+                "reference": "be1ddcf29356cea48c87ff8a8d670311f3d78a38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/40a35abb9423e16f8bafcb1ed1b7e027881b0422",
-                "reference": "40a35abb9423e16f8bafcb1ed1b7e027881b0422",
+                "url": "https://api.github.com/repos/composer/composer/zipball/be1ddcf29356cea48c87ff8a8d670311f3d78a38",
+                "reference": "be1ddcf29356cea48c87ff8a8d670311f3d78a38",
                 "shasum": ""
             },
             "require": {
@@ -126,12 +126,12 @@
                 {
                     "name": "Nils Adermann",
                     "email": "naderman@naderman.de",
-                    "homepage": "http://www.naderman.de"
+                    "homepage": "https://www.naderman.de"
                 },
                 {
                     "name": "Jordi Boggiano",
                     "email": "j.boggiano@seld.be",
-                    "homepage": "http://seld.be"
+                    "homepage": "https://seld.be"
                 }
             ],
             "description": "Composer helps you declare, manage and install dependencies of PHP projects. It ensures you have the right stack everywhere.",
@@ -141,7 +141,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2020-04-10T10:24:43+00:00"
+            "time": "2020-04-13T10:48:43+00:00"
         },
         {
             "name": "composer/semver",
@@ -1210,12 +1210,44 @@
             "time": "2020-03-30T11:42:42+00:00"
         },
         {
+            "name": "tkotosz/cli-app-wrapper",
+            "version": "dev-play-with-composer-2x",
+            "dist": {
+                "type": "path",
+                "url": "../cli-app-wrapper",
+                "reference": "e612a2da7c6e0188304b6dbacaba583e55c44053"
+            },
+            "require": {
+                "composer/composer": "2.0.x-dev",
+                "ext-json": "*",
+                "league/flysystem": "^1.0",
+                "symfony/console": "^5.0",
+                "symfony/yaml": "^5.0",
+                "tkotosz/cli-app-wrapper-api": "*"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "Tkotosz\\CliAppWrapper\\": "src"
+                }
+            },
+            "authors": [
+                {
+                    "name": "Tibor Kotosz",
+                    "email": "kotosy@gmail.com"
+                }
+            ],
+            "transport-options": {
+                "symlink": false
+            }
+        },
+        {
             "name": "tkotosz/cli-app-wrapper-api",
             "version": "dev-play-with-composer-2x",
             "dist": {
                 "type": "path",
-                "url": "cli-app-wrapper-api",
-                "reference": "975d3c9f393af6ffc9528fb9daad95261fbe0b49"
+                "url": "../cli-app-wrapper-api",
+                "reference": "3f1d904680832ff2d796b9edfe97dd19e095fbcc"
             },
             "type": "library",
             "autoload": {
@@ -1229,19 +1261,18 @@
                     "email": "kotosy@gmail.com"
                 }
             ],
-            "description": "CLI App Wrapper API"
+            "description": "CLI App Wrapper API",
+            "transport-options": {
+                "symlink": false
+            }
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "composer/composer": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": {
-        "ext-json": "*"
-    },
+    "platform": [],
     "platform-dev": []
 }

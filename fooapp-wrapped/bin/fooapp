@@ -7,5 +7,5 @@ use Tkotosz\CliAppWrapperApi\ApplicationConfig;
 require __DIR__ . '/../vendor/autoload.php';
 
 (new CliAppWrapper)
-    ->createWrappedApplication(ApplicationConfig::fromArray(require __DIR__ . '/../src/config.php'))
+    ->createWrappedApplication(ApplicationConfig::fromArray(require __DIR__ . '/../config.php'))
     ->run();

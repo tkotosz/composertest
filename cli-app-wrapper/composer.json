@@ -4,7 +4,7 @@
     "repositories": [
         {
             "type": "path",
-            "url": "cli-app-wrapper-api/"
+            "url": "../cli-app-wrapper-api/"
         }
     ],
     "require": {
@@ -21,7 +21,6 @@
             "email": "kotosy@gmail.com"
         }
     ],
-    "bin": ["bin/fooapp"],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {

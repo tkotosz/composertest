@@ -1,0 +1,32 @@
+{
+    "name": "tkotosz/fooapp-wrapped",
+    "type": "project",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../cli-app-wrapper/",
+            "options": {
+                "symlink": false
+            }
+        },
+        {
+            "type": "path",
+            "url": "../cli-app-wrapper-api/",
+            "options": {
+                "symlink": false
+            }
+        }
+    ],
+    "require": {
+        "tkotosz/cli-app-wrapper": "*"
+    },
+    "authors": [
+        {
+            "name": "Tibor Kotosz",
+            "email": "kotosy@gmail.com"
+        }
+    ],
+    "bin": ["bin/fooapp"],
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
