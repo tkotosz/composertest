@@ -43,8 +43,6 @@ class Application implements ApplicationInterface
         $container->registerForAutoTagging(CommandHandler::class, 'fooapp.cli.command.handler');
         $container->registerForAutoTagging(CommandProviderInterface::class, 'fooapp.cli.command.provider');
 
-
-
         $containerBuilder->addCompilerPass(new RegisterCommandsCompilerPass());
 
         $appDefinition = new Definition(
@@ -54,9 +52,6 @@ class Application implements ApplicationInterface
         $appDefinition->setPublic(true);
         $appDefinition->addMethodCall('setCommandLoader', [new Reference(SymfonyCommandLoader::class)]);
         $containerBuilder->setDefinition('fooapp.cli', $appDefinition);
-
-
-
 
         $treeBuilder = new TreeBuilder('root');
         $builder = $treeBuilder->getRootNode();

@@ -24,6 +24,27 @@ class ApplicationManager implements ApplicationManagerInterface
         $this->workingDir = $workingDir;
     }
 
+    public function getApplicationConfig(): ApplicationConfig
+    {
+        return $this->config;
+    }
+
+    public function getWorkingDirectory(): string
+    {
+        return $this->workingDir;
+    }
+
+    public function getUserConfig(): array
+    {
+        $userConfigPath = $this->workingDir . '/' . $this->config->userConfigFile();
+
+        if (!file_exists($userConfigPath)) {
+            return [];
+        }
+
+        return Yaml::parse(file_get_contents($userConfigPath));
+    }
+
     public function installExtension(string $extension): int
     {
         $wrappedAppConfigManager = new WrappedAppConfigManager($this->config);
@@ -68,16 +89,6 @@ class ApplicationManager implements ApplicationManagerInterface
         return $this->installExtension('');
     }
 
-    public function getApplicationConfig(): ApplicationConfig
-    {
-        return $this->config;
-    }
-
-    public function getWorkingDirectory(): string
-    {
-        return $this->workingDir;
-    }
-
     public function findInstalledExtensionClasses(): array
     {
         return (require $this->workingDir . '/' . $this->config->appDir() . '/extensions.php');
@@ -99,16 +110,5 @@ class ApplicationManager implements ApplicationManagerInterface
             'tkotosz/fooapp-bar-extension' => '1.0.0',
             'tkotosz/fooapp-baz-extension' => '1.0.0',
         ];
-    }
-
-    public function getUserConfig(): array
-    {
-        $userConfigPath = $this->workingDir . '/' . $this->config->userConfigFile();
-
-        if (!file_exists($userConfigPath)) {
-            return [];
-        }
-
-        return Yaml::parse(file_get_contents($userConfigPath));
     }
 }
