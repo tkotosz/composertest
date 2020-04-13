@@ -11,13 +11,11 @@ class CliAppWrapper
     public function createWrappedApplication(ApplicationConfig $config): Application
     {
         try {
-            $workingDir = $this->getWorkingDir($config);
+            $workingDir = $this->locateWorkingDir($config);
 
-            if ($workingDir === null) {
-                return new AppInitApplication($config);
+            if (!$this->autoloadWrappedApplication($config, $workingDir)) {
+                return new AppInitApplication($config, $workingDir);
             }
-
-            $this->autoloadWrappedApplication($config, $workingDir);
 
             return $this->createApplication($config, $workingDir);
         } catch (\Exception $e) {
@@ -45,25 +43,42 @@ class CliAppWrapper
         return $appFactory::create(new ApplicationManager($config, $workingDir));
     }
 
-    private function autoloadWrappedApplication(ApplicationConfig $config, string $workingDir): void
+    private function autoloadWrappedApplication(ApplicationConfig $config, string $workingDir): bool
     {
-        require $workingDir . '/' . $config->appDir() . '/autoload.php';
+        $autoload = $workingDir . '/' . $config->appDir() . '/autoload.php';
+
+        if (!file_exists($autoload)) {
+            return false;
+        }
+
+        require $autoload;
+
+        return true;
     }
 
-    private function getWorkingDir(ApplicationConfig $config): ?string
+    private function locateWorkingDir(ApplicationConfig $config): string
     {
         $local = getcwd();
         $global = $this->getHomeDir();
+        $mode = $_SERVER['argv'][1] ?? null;
 
-        if (file_exists($local . '/' . $config->appDir() . '/autoload.php')) {
+        if ($mode === 'local') {
+            unset($_SERVER['argv'][1]);
+            $_SERVER['argv'] = array_values($_SERVER['argv']);
             return $local;
         }
 
-        if (file_exists($global . '/' . $config->appDir() . '/autoload.php')) {
+        if ($mode === 'global') {
+            unset($_SERVER['argv'][1]);
+            $_SERVER['argv'] = array_values($_SERVER['argv']);
             return $global;
         }
 
-        return null;
+        if (file_exists(getcwd() . '/' . $config->userConfigFile())) {
+            return $local;
+        }
+
+        return $global;
     }
 
     private function getHomeDir(): string
