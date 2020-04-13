@@ -1,19 +1,16 @@
 {
-    "name": "tkotosz/fooapp-extension-api",
+    "name": "tkotosz/cli-app-wrapper-api",
     "type": "library",
-    "description": "Foo Extension API",
+    "description": "CLI App Wrapper API",
     "authors": [
         {
             "name": "Tibor Kotosz",
             "email": "kotosy@gmail.com"
         }
     ],
-    "require": {
-        "symfony/config": "^5.0"
-    },
     "autoload": {
         "psr-4": {
-            "Tkotosz\\FooApp\\ExtensionApi\\": "src"
+            "Tkotosz\\CliAppWrapperApi\\": "src"
         }
     }
 }

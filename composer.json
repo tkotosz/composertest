@@ -1,28 +1,23 @@
 {
-    "name": "tkotosz/fooapp",
+    "name": "tkotosz/cli-app-wrapper",
     "type": "project",
     "repositories": [
         {
             "type": "path",
-            "url": "fooapp-extension-api/",
-            "options": {
-                "symlink": false
-            }
+            "url": "cli-app-wrapper-api/"
         }
     ],
     "require": {
         "composer/composer": "2.0.x-dev",
+        "tkotosz/cli-app-wrapper-api": "*",
         "ext-json": "*",
         "symfony/console": "^5.0",
         "league/flysystem": "^1.0",
-        "symfony/yaml": "^5.0",
-        "tkotosz/fooapp-extension-api": "*",
-        "symfony/dependency-injection": "^5.0",
-        "symfony/config": "^5.0"
+        "symfony/yaml": "^5.0"
     },
     "authors": [
         {
-            "name": "tkotosz",
+            "name": "Tibor Kotosz",
             "email": "kotosy@gmail.com"
         }
     ],
@@ -31,7 +26,7 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "Tkotosz\\FooApp\\": "src"
+            "Tkotosz\\CliAppWrapper\\": "src"
         }
     }
 }

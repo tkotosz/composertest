@@ -1,6 +1,6 @@
 <?php
 
-namespace Tkotosz\FooApp\Composer;
+namespace Tkotosz\CliAppWrapper\Composer;
 
 class ComposerConfig
 {
@@ -29,7 +29,7 @@ class ComposerConfig
             'config' => ['vendor-dir' => $this->appDir],
             'require' => $this->rootRequirements,
             'provide' => [
-                'tkotosz/fooapp-extension-api' => '*'
+                'tkotosz/cli-app-wrapper-api' => '*'
             ]
         ];
 

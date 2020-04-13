@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "tkotosz/fooapp-extension-api": "*",
+        "tkotosz/fooapp": "*",
         "symfony/config": "*"
     },
     "autoload": {

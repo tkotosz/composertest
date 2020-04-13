@@ -10,10 +10,9 @@ return [
             );
         },
     ],
-    'files-whitelist' => ['src/config/config.php'],
+    'files-whitelist' => ['src/config.php'],
     'whitelist' => [
-        'Tkotosz\FooApp\ExtensionApi\*',
-        'Composer\Autoload\ClassLoader',
-        'Symfony\Component\*', // part of the API for now
+        'Tkotosz\WrappedCliApp\*',
+        'Composer\Autoload\ClassLoader'
     ]
 ];

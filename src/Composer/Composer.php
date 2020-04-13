@@ -1,6 +1,6 @@
 <?php
 
-namespace Tkotosz\FooApp\Composer;
+namespace Tkotosz\CliAppWrapper\Composer;
 
 use Composer\Factory;
 use Composer\Installer;
@@ -39,14 +39,18 @@ class Composer
         return $result;
     }
 
-    public function install(InputInterface $input, OutputInterface $output): int
+    public function install(?InputInterface $input = null, ?OutputInterface $output = null): int
     {
+        $input = $input ?? new ArgvInput();
+        $output = $output ?? new BufferedOutput();
         $result = $this->installer($input, $output)
             ->setUpdate(true)
             ->setWriteLock(false)
             ->setDevMode(false)
             ->setPreferStable(true)
             ->run();
+
+        echo $output->fetch();
 
         $this->updateInstalledExtensionsFile();
 

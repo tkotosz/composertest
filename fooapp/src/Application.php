@@ -8,8 +8,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Yaml\Yaml;
-use Tkotosz\FooApp\Composer\ComposerConfig;
 use Tkotosz\FooApp\Console\Command\ExtensionInstallCommand;
+use Tkotosz\FooApp\Console\Command\ExtensionListCommand;
+use Tkotosz\FooApp\Console\Command\ExtensionRemoveCommand;
 use Tkotosz\FooApp\Console\CompositeCommandsProvider;
 use Tkotosz\FooApp\Console\SymfonyCommandLoader;
 use Tkotosz\FooApp\DependencyInjection\CompilerPass\RegisterCommandsCompilerPass;
@@ -18,19 +19,24 @@ use Tkotosz\FooApp\ExtensionApi\Command;
 use Tkotosz\FooApp\ExtensionApi\CommandHandler;
 use Tkotosz\FooApp\ExtensionApi\CommandProviderInterface;
 use Tkotosz\FooApp\ExtensionApi\Extension;
-use Tkotosz\FooApp\FooExtension\Config;
+use Tkotosz\CliAppWrapperApi\Application as ApplicationInterface;
+use Tkotosz\CliAppWrapperApi\ApplicationManager;
 
-class Application
+class Application implements ApplicationInterface
 {
     /** @var array */
     private $extensions;
 
-    public function __construct(array $extensions)
+    /** @var ApplicationManager */
+    private $applicationManager;
+
+    public function __construct(array $extensions, ApplicationManager $applicationManager)
     {
         $this->extensions = $extensions;
+        $this->applicationManager = $applicationManager;
     }
 
-    public function run(ComposerConfig $composerConfig): void
+    public function run(): void
     {
         $containerBuilder = new ContainerBuilder();
         $container = new DependencyInjectionContainer($containerBuilder);
@@ -62,16 +68,16 @@ class Application
         $extensions = (new TreeBuilder('extensions'))->getRootNode();
         $extensions
             ->arrayPrototype()
-                ->children()
-                    ->scalarNode('name')->end()
-                    ->scalarNode('version')->end()
-                ->end()
+            ->children()
+            ->scalarNode('name')->end()
+            ->scalarNode('version')->end()
+            ->end()
             ->end();
 
         $foo = (new TreeBuilder('foo'))->getRootNode();
         $foo
             ->children()
-                ->scalarNode('bar')->end()
+            ->scalarNode('bar')->end()
             ->end();
 
         $builder
@@ -105,11 +111,13 @@ class Application
         }
 
         $containerBuilder->compile();
-        $app = $containerBuilder->get('fooapp.cli');
+        $consoleApp = $containerBuilder->get('fooapp.cli');
 
-        $app->add(new ExtensionInstallCommand($composerConfig));
+        $consoleApp->add(new ExtensionInstallCommand($this->applicationManager));
+        $consoleApp->add(new ExtensionListCommand($this->applicationManager));
+        $consoleApp->add(new ExtensionRemoveCommand($this->applicationManager));
 
-        $app->run();
+        $consoleApp->run();
     }
 
     /**
