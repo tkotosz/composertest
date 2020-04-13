@@ -78,8 +78,8 @@ class Composer
 
     private function createFiles(): void
     {
-        mkdir($this->composerConfig->appDir());
-        file_put_contents($this->composerConfig->composerJsonFile(), $this->composerConfig->toJson());
+        mkdir($this->composerConfig->vendorDir());
+        file_put_contents($this->composerConfig->composerJsonFile(), $this->composerConfig->toComposerJson());
         file_put_contents($this->composerConfig->installedExtensionsFile(), "<?php\n\nreturn [\n];\n");
     }
 
@@ -87,7 +87,7 @@ class Composer
     {
         unlink($this->composerConfig->composerJsonFile());
         unlink($this->composerConfig->installedExtensionsFile());
-        rmdir($this->composerConfig->appDir());
+        rmdir($this->composerConfig->vendorDir());
     }
 
     private function updateInstalledExtensionsFile(): void

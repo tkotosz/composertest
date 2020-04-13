@@ -4,5 +4,5 @@ namespace Tkotosz\CliAppWrapperApi;
 
 interface ApplicationFactory
 {
-    public static function create(array $extensions, ApplicationManager $applicationManager): Application;
+    public static function create(ApplicationManager $applicationManager): Application;
 }

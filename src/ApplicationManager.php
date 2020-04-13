@@ -2,140 +2,113 @@
 
 namespace Tkotosz\CliAppWrapper;
 
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 use Tkotosz\CliAppWrapper\Composer\Composer;
-use Tkotosz\CliAppWrapper\Config\WrappedAppConfig;
+use Tkotosz\CliAppWrapper\Composer\ComposerConfig;
+use Tkotosz\CliAppWrapperApi\ApplicationConfig;
+use Tkotosz\CliAppWrapper\Service\WrappedAppComposerJsonManager;
+use Tkotosz\CliAppWrapper\Service\WrappedAppConfigManager;
 use Tkotosz\CliAppWrapperApi\ApplicationManager as ApplicationManagerInterface;
 
 class ApplicationManager implements ApplicationManagerInterface
 {
-    /** @var WrappedAppConfig */
+    /** @var ApplicationConfig */
     private $config;
 
-    public function __construct(WrappedAppConfig $config)
+    /** @var string */
+    private $workingDir;
+
+    public function __construct(ApplicationConfig $config, string $workingDir)
     {
         $this->config = $config;
+        $this->workingDir = $workingDir;
     }
 
     public function installExtension(string $extension): int
     {
-        $fileSystem = new Filesystem(new Local('./'));
+        $wrappedAppConfigManager = new WrappedAppConfigManager($this->config);
+        $wrappedAppComposerJsonManager = new WrappedAppComposerJsonManager($this->config);
 
-        $composerConfig = $this->config->toComposerConfig();
-
-        $composer = new Composer($composerConfig);
-
-        $conf = [];
-        if ($fileSystem->has($this->config->appConfigFile())) {
-            $conf = Yaml::parse($fileSystem->read($this->config->appConfigFile()));
-        }
-        $composerJsonContentOrig = $composerJsonContent = json_decode($fileSystem->read($composerConfig->composerJsonFile()), true);
-
-        if (!empty($extension)) {
-
-            $found = false;
-            foreach ($conf['extensions'] ?? [] as $extension) {
-                if ($extension['name'] == $extension) {
-                    $found = true;
-                    break;
-                }
-            }
-
-            if (!$found) {
-                $conf['extensions'][] = [
-                    'name' => $extension,
-                    'version' => '*'
-                ];
-            }
-        }
-
-        $composerJsonContent['require'] = $composerConfig->rootRequirements();
-
-        foreach ($conf['extensions'] ?? [] as $extension) {
-            $composerJsonContent['require'][$extension['name']] = $extension['version'];
-        }
-
-        $fileSystem->put($composerConfig->composerJsonFile(), json_encode($composerJsonContent, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-
+        // get the default requirements
+        $defaultComposerConfig = ComposerConfig::fromConfigAndWorkingDir($this->config, $this->workingDir);
+        $composer = new Composer($defaultComposerConfig);
+        // get the current composer config
+        $currentComposerConfig = $wrappedAppComposerJsonManager->load($this->workingDir);
+        // get the currently required extensions
+        $currentAppConfig = $wrappedAppConfigManager->load($this->workingDir, $this->config->userConfigFile());
+        // add newly required extension if provided
+        if ($extension) $currentAppConfig->addExtension($extension);
+        // build new composer config from default with the required extensions
+        $newComposerConfig = $defaultComposerConfig->addRequiredExtensions($currentAppConfig->extensions());
+        // save the new composer config
+        $wrappedAppComposerJsonManager->save($this->workingDir, $newComposerConfig);
+        // try to install
         $status = $composer->install();
 
         if ($status !== 0) {
-            $fileSystem->put($composerConfig->composerJsonFile(), json_encode($composerJsonContentOrig, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            // restore previous state if failed on install
+            $wrappedAppComposerJsonManager->save($this->workingDir, $currentComposerConfig);
 
             return $status;
         }
 
-        $fileSystem->put($this->config->appConfigFile(), Yaml::dump($conf));
+        // update the app config
+        $wrappedAppConfigManager->save($this->workingDir, $this->config->userConfigFile(), $currentAppConfig);
 
         return 0;
-    }
-
-    public function listExtensions(): array
-    {
-        $fileSystem = new Filesystem(new Local('./'));
-
-        $config = json_decode($fileSystem->read('.fooapp/composer-config.json'), true);
-
-        // get from packagist based on package type?
-        $availableExtensions = [
-            'tkotosz/fooapp-foo-extension' => '1.0.0',
-            'tkotosz/fooapp-bar-extension' => '1.0.0',
-            'tkotosz/fooapp-baz-extension' => '1.0.0',
-        ];
-        $installedExtensions = $config['require'] ?? [];
-
-        $list = [];
-        foreach ($availableExtensions as $extension => $latestVersion) {
-            $list[] = [
-                'Name' => $extension,
-                'Installed' => isset($installedExtensions[$extension]) ? 'Yes' : 'No',
-                'Latest Version' => $latestVersion,
-                'Installed Version' => isset($installedExtensions[$extension]) ? $installedExtensions[$extension] : 'None'
-            ];
-        }
-
-        return $list;
     }
 
     public function removeExtension(string $extension): int
     {
-        return 0;
-//        $fileSystem = new Filesystem(new Local('./'));
-//
-//        $config = json_decode($fileSystem->read('.fooapp/composer-config.json'), true);
-//        unset($config['require'][$input->getArgument('extension')]);
-//        if (empty($config['require'])) {
-//            unset($config['require']);
-//        }
-//        $fileSystem->put('.fooapp/composer-config.json', json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-//
-//        $composerIo = new ConsoleIO($input, $output, $this->getHelperSet());
-//        $customComposer = Factory::create($composerIo, '.fooapp/composer-config.json', true);
-//        $installer = Installer::create($composerIo, $customComposer);
-//
-//        $installer
-//            ->setUpdate(true)
-//            ->setWriteLock(false)
-//            ->setDevMode(false)
-//            ->setPreferStable(true)
-//            ->run();
-//
-//        $x = require __DIR__ . '/../../../.fooapp/extensions.php';
-//        foreach ($customComposer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
-//            if ($package->getType() === 'fooapp-extension') {
-//                $x[] = $package->getExtra()['fooapp-extension-class'];
-//            }
-//        }
-//
-//        $x = array_unique($x);
-//        $x = array_map(function ($y) { return "    '$y'";}, $x);
-//        $x = implode(",\n", $x);
-//        $x = "<?php\n\nreturn [\n" . $x . "\n];";
-//
-//        $fileSystem->put('.fooapp/extensions.php', $x);
-//
-//        return 0;
+        $wrappedAppConfigManager = new WrappedAppConfigManager($this->config);
+        $currentAppConfig = $wrappedAppConfigManager->load($this->workingDir, $this->config->userConfigFile());
+        $currentAppConfig->removeExtension($extension);
+        $wrappedAppConfigManager->save($this->workingDir, $this->config->userConfigFile(), $currentAppConfig);
+
+        return $this->installExtension('');
+    }
+
+    public function getApplicationConfig(): ApplicationConfig
+    {
+        return $this->config;
+    }
+
+    public function getWorkingDirectory(): string
+    {
+        return $this->workingDir;
+    }
+
+    public function findInstalledExtensionClasses(): array
+    {
+        return (require $this->workingDir . '/' . $this->config->appDir() . '/extensions.php');
+    }
+
+    public function findInstalledExtensions(): array
+    {
+        $wrappedAppComposerJsonManager = new WrappedAppComposerJsonManager($this->config);
+
+        // TODO filter main app :)
+        return $wrappedAppComposerJsonManager->load($this->workingDir)->rootRequirements();
+    }
+
+    public function findAvailableExtensions(): array
+    {
+        // get from packagist based on package type?
+        return $availableExtensions = [
+            'tkotosz/fooapp-foo-extension' => '1.0.0',
+            'tkotosz/fooapp-bar-extension' => '1.0.0',
+            'tkotosz/fooapp-baz-extension' => '1.0.0',
+        ];
+    }
+
+    public function getUserConfig(): array
+    {
+        $userConfigPath = $this->workingDir . '/' . $this->config->userConfigFile();
+
+        if (!file_exists($userConfigPath)) {
+            return [];
+        }
+
+        return Yaml::parse(file_get_contents($userConfigPath));
     }
 }

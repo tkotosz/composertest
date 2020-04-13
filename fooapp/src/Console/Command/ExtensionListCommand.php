@@ -4,7 +4,6 @@ namespace Tkotosz\FooApp\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tkotosz\CliAppWrapperApi\ApplicationManager;
@@ -27,13 +26,23 @@ class ExtensionListCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $availableExtensions = $this->applicationManager->findAvailableExtensions();
+        $installedExtensions = $this->applicationManager->findInstalledExtensions();
+
+        $list = [];
+        foreach ($availableExtensions as $extension => $latestVersion) {
+            $list[] = [
+                'Name' => $extension,
+                'Installed' => isset($installedExtensions[$extension]) ? 'Yes' : 'No',
+                'Latest Version' => $latestVersion,
+                'Installed Version' => isset($installedExtensions[$extension]) ? $installedExtensions[$extension] : 'None'
+            ];
+        }
+
         $table = new Table($output);
-
-        $extensions = $this->applicationManager->listExtensions();
-
-        if (count($extensions) > 0) {
-            $table->addRows($extensions);
-            $table->setHeaders(array_keys(array_shift($extensions)));
+        if (count($list) > 0) {
+            $table->addRows($list);
+            $table->setHeaders(array_keys(array_shift($list)));
             $table->render();
         }
 

@@ -25,4 +25,9 @@ class InitResult
     {
         return $this->output;
     }
+
+    public function status(): int
+    {
+        return $this->status;
+    }
 }

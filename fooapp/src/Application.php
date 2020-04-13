@@ -24,15 +24,11 @@ use Tkotosz\CliAppWrapperApi\ApplicationManager;
 
 class Application implements ApplicationInterface
 {
-    /** @var array */
-    private $extensions;
-
     /** @var ApplicationManager */
     private $applicationManager;
 
-    public function __construct(array $extensions, ApplicationManager $applicationManager)
+    public function __construct(ApplicationManager $applicationManager)
     {
-        $this->extensions = $extensions;
         $this->applicationManager = $applicationManager;
     }
 
@@ -99,7 +95,7 @@ class Application implements ApplicationInterface
         $configProcessor = new Processor();
 
         try {
-            $inputConfig = Yaml::parse(file_get_contents(getcwd() . '/fooapp.yml'));
+            $inputConfig = $this->applicationManager->getUserConfig();
             $processedConfig = $configProcessor->process($configTree, ['root' => $inputConfig]);
         } catch (\Throwable $throwable) {
             echo $throwable->getMessage() . PHP_EOL;
@@ -135,6 +131,6 @@ class Application implements ApplicationInterface
             }
 
             return new $className;
-        }, $this->extensions));
+        }, $this->applicationManager->findInstalledExtensionClasses()));
     }
 }

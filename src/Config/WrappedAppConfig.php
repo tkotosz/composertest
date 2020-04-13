@@ -2,8 +2,6 @@
 
 namespace Tkotosz\CliAppWrapper\Config;
 
-use Tkotosz\CliAppWrapper\Composer\ComposerConfig;
-
 class WrappedAppConfig
 {
     /** @var array */
@@ -11,32 +9,49 @@ class WrappedAppConfig
 
     public static function fromArray(array $config): self
     {
-        // TODO validation
+        if (!isset($config['extensions'])) {
+            $config['extensions'] = [];
+        }
+
         return new self($config);
     }
 
-    public function toComposerConfig(): ComposerConfig
+    public function extensions(): array
     {
-        return new ComposerConfig(
-            $this->config['app_dir'],
-            [$this->config['app_package'] => $this->config['app_version']],
-            $this->config['repositories']
-        );
+        return $this->config['extensions'];
     }
 
-    public function appDir(): string
+    public function addExtension(string $requestedExtensions): void
     {
-        return $this->config['app_dir'];
+        $found = false;
+        foreach ($this->config['extensions'] as $extension) {
+            if ($extension['name'] === $requestedExtensions) {
+                $found = true;
+                break;
+            }
+        }
+
+        if (!$found) {
+            $this->config['extensions'][] = [
+                'name' => $requestedExtensions,
+                'version' => '*'
+            ];
+        }
     }
 
-    public function appConfigFile(): string
+    public function removeExtension(string $requestedExtensions)
     {
-        return $this->config['app_config_file'];
+        foreach ($this->config['extensions'] as $key => $extension) {
+            if ($extension['name'] === $requestedExtensions) {
+                unset($this->config['extensions'][$key]);
+                break;
+            }
+        }
     }
 
-    public function appFactory(): string
+    public function toArray(): array
     {
-        return $this->config['app_factory'];
+        return $this->config;
     }
 
     private function __construct(array $config)

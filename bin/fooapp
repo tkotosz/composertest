@@ -1,41 +1,11 @@
 #!/bin/env php
 <?php
 
+use Tkotosz\CliAppWrapper\CliAppWrapper;
+use Tkotosz\CliAppWrapperApi\ApplicationConfig;
+
 require __DIR__ . '/../vendor/autoload.php';
 
-use Tkotosz\CliAppWrapper\ApplicationManager;
-use Tkotosz\CliAppWrapper\Composer\Composer;
-use Tkotosz\CliAppWrapper\Config\WrappedAppConfig;
-use Tkotosz\CliAppWrapperApi\ApplicationFactory;
-
-$config = WrappedAppConfig::fromArray(require __DIR__ . '/../src/config.php');
-
-$appAutoload = getcwd() . '/' . $config->appDir() . '/autoload.php';
-
-if (!file_exists($appAutoload)) {
-    $composer = new Composer($config->toComposerConfig());
-
-    $result = $composer->init();
-
-    if ($result->isError()) {
-        echo $result->output();
-        exit(255);
-    }
-}
-
-require $appAutoload;
-
-$appFactory = $config->appFactory();
-
-if (!class_exists($appFactory)) {
-    die('app factory not found');
-}
-
-if (!is_subclass_of($appFactory, ApplicationFactory::class)) {
-    die('app factory not valid');
-}
-
-$applicationManager = new ApplicationManager($config);
-$extensions = require getcwd() . '/' . $config->appDir() . '/extensions.php';
-$application = $appFactory::create($extensions, $applicationManager);
-$application->run();
+(new CliAppWrapper)
+    ->createWrappedApplication(ApplicationConfig::fromArray(require __DIR__ . '/../src/config.php'))
+    ->run();
