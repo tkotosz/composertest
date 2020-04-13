@@ -28,8 +28,8 @@ class ApplicationManager implements ApplicationManagerInterface
         $composer = new Composer($composerConfig);
 
         $conf = [];
-        if ($fileSystem->has('fooapp.yml')) {
-            $conf = Yaml::parse($fileSystem->read('fooapp.yml'));
+        if ($fileSystem->has($this->config->appConfigFile())) {
+            $conf = Yaml::parse($fileSystem->read($this->config->appConfigFile()));
         }
         $composerJsonContentOrig = $composerJsonContent = json_decode($fileSystem->read($composerConfig->composerJsonFile()), true);
 
@@ -67,7 +67,7 @@ class ApplicationManager implements ApplicationManagerInterface
             return $status;
         }
 
-        $fileSystem->put('fooapp.yml', Yaml::dump($conf));
+        $fileSystem->put($this->config->appConfigFile(), Yaml::dump($conf));
 
         return 0;
     }

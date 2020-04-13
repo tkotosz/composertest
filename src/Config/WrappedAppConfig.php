@@ -29,6 +29,11 @@ class WrappedAppConfig
         return $this->config['app_dir'];
     }
 
+    public function appConfigFile(): string
+    {
+        return $this->config['app_config_file'];
+    }
+
     public function appFactory(): string
     {
         return $this->config['app_factory'];
